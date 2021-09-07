@@ -1,0 +1,17 @@
+%this is a  program to calculate the motion energy in a petri dish full of
+%tadpoles. it first defines regions of interest. This will generate a
+%circle that the user has to place on each well. In each region of interest
+%then it will calculate the change in the image by first calculating the
+%difference in two consecutive frames and then calculating the standard
+%deviation of that image and provides one number as the output.
+path=uigetdir;
+cd(path)
+%read the avi file
+filename=dir('*.mp4');
+v=VideoReader(filename.name);
+video=read(v);
+figure;
+imshow(video(:,:,:,1))
+roi = images.roi.Circle
+ROI=getPosition(H);
+
