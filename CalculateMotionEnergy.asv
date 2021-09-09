@@ -47,16 +47,16 @@ for i=1:numwells
 end
 subplot(2,1,2)
 hold on
-time=(1:1:nFrames-10)/(v.FrameRate*60);
-for i=1:numwells
-    plot(time,smooth(Imstd{i}(1:nFrames-10),1000),'Color',color(i,:),'LineWidth',1)
+time=(1:1:nFrames-1)/(v.FrameRate*60);
+for i=1:2
+    plot(time,Imstd{i},'Color',color(i,:),'LineWidth',1)
     xlabel('Time (min)') 
     ylabel('Movement Index')
 end
 %compare responses every five mintues
-% group=round(time/5);
-% [P,ANOVATAB,STATS]=kruskalwallis(smooth(Imstd{5}(1:nFrames-10),v.FrameRate*30),group)
+% group1=round(time/5);
+% [P,ANOVATAB,STATS]=kruskalwallis(smooth(Imstd(5,:),v.FrameRate*30),group)
 % figure
 % multcompare(STATS)
-save('Fluox+Donepezil_tadpoles072721_recover_MvmntIDX.mat')
+% save('Fluox+Donepezil_tadpoles072721_recover_MvmntIDX_W6.mat')
 % save('Fluox+Donepezil_tadpoles072721_recover.mat','-v7.3')

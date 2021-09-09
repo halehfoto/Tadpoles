@@ -1,14 +1,13 @@
-function [Imstd_well] = AnalyzeWell(v,nFrames,roi,I_crop)
+function [Imstd_well] = AnalyzeWell(v,nFrames,roi,imageSize)
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
-I_crop=zeros([size(imcrop(I(:,:,1),roi.Position)),nFrames]);
-ImDiff=zeros([size(imcrop(I(:,:,1),roi.Position)),nFrames-1]);
-
+I_crop=zeros([imageSize,nFrames]);
 k=1;
 v.CurrentTime = 0;
+I1=readFrame(v);
 while hasFrame(v) && k<nFrames
-    I_temp=readFrame(v);
-    I_crop(:,:,k)=imcrop(I_temp(:,:,1),roi.Position);
+    I2=readFrame(v);
+    I_crop=imcrop(I_temp(:,:,1),roi.Position);
     k=k+1;
 end
 ImDiff=diff(I_crop,1,3);
