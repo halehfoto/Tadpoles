@@ -24,6 +24,8 @@ imshow(I);
 hold on
 
 color=jet(numperrow*numrows);
+%this draws squares around each well that can be repositined by the user on
+%each well
 for i=1:numwells
     if i<numperrow+1
         roi{i} = drawrectangle('Position',[179+i*200 109 182.0000 177],'Color',color(i,:));
