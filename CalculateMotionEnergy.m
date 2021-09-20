@@ -6,28 +6,27 @@
 %deviation of that image and provides one number as the output.
 clearvars
 close all
-path=uigetdir;
+% path=uigetdir;
+path='C:\Users\Haleh\Dropbox (HMS)\Biostasis\video_temp\Haleh_Tadpole_Videos/'
 cd(path)
 %read the avi file
-filename='Fluox+Donepezil_tadpoles072721_recover.mp4';
+filename='Fenofibrate.mp4';
 v=VideoReader(filename);
-numperrow=input('Please enter the number of wells per row: ');
-numrows=input('Please enter the number of rows: ');
+numwells=input('Please enter the number of wells : ');
 nFrames=input('Please enter the number of frames to be analyzed enter [] to analyze all: ');
 if isempty(nFrames)
     nFrames=v.NumFrames;
 end
-numwells=numperrow*numrows;
 figure(1);
 I=read(v,1);
 imshow(I);
 hold on
 
-color=jet(numperrow*numrows);
+color=jet(numwells);
 %this draws squares around each well that can be repositined by the user on
 %each well
 for i=1:numwells
-    if i<numperrow+1
+    if i<numwells/2
         roi{i} = drawrectangle('Position',[179+i*200 109 182.0000 177],'Color',color(i,:));
     else
         roi{i} = drawrectangle('Position',[185+(i-3)*200 349 182.0000 177],'Color',color(i,:));
@@ -37,7 +36,7 @@ keyboard
 imageSize = size(imcrop(I(:,:,1),roi{1}.Position));
 %% call the function to analyze each well
 Imstd=cell(numwells);
-for i=3:numwells
+for i=1:numwells
     Imstd{i}=AnalyzeWell(v,nFrames,roi{i});
 end
 figure;
@@ -49,9 +48,9 @@ for i=1:numwells
 end
 subplot(2,1,2)
 hold on
-time=(1:1:nFrames-10)/(v.FrameRate*60);
+time=(1:1:nFrames-1)/(v.FrameRate*60);
 for i=1:numwells
-    plot(time,smooth(Imstd{i}(1:nFrames-10),1000),'Color',color(i,:),'LineWidth',1)
+    plot(time,smooth(Imstd{i}(1:nFrames-1),50),'Color',color(i,:),'LineWidth',1)
     xlabel('Time (min)') 
     ylabel('Movement Index')
 end
@@ -60,5 +59,5 @@ end
 % [P,ANOVATAB,STATS]=kruskalwallis(smooth(Imstd{5}(1:nFrames-10),v.FrameRate*30),group)
 % figure
 % multcompare(STATS)
-save('Fluox+Donepezil_tadpoles072721_recover_MvmntIDX.mat')
+save('Fenofibrate.mp4.mat')
 % save('Fluox+Donepezil_tadpoles072721_recover.mat','-v7.3')

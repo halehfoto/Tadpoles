@@ -16,7 +16,7 @@ color=jet(6);
 figure
 for i=1:6
     %stas_Imstd_smooth(i,:)=smooth(stasis.Imstd(i,:),stasis.v.FrameRate*60);
-   stas_Imstd_smooth(i,:)=smooth(stasis.Imstd(i,:),10);
+   stas_Imstd_smooth(i,:)=smooth(stasis.Imstd(i,:),stasis.v.FrameRate*60);
 
     plot(stasis.time,stas_Imstd_smooth(i,:),'Color',color(i,:))
     hold on
@@ -25,9 +25,9 @@ YL=ylim(gca);
 figure
 for i=1:6
     %recover_Imstd_smooth(i,:)=smooth(recover.Imstd{i},stasis.v.FrameRate*60);
-        recover_Imstd_smooth(i,:)=smooth(recover.Imstd{i},10);
+        recover_Imstd_smooth(i,:)=smooth(recover.Imstd{i},stasis.v.FrameRate*60);
 
-    plot(recover.time(1:342566),recover_Imstd_smooth(i,1:342566),'Color',color(i,:))
+    plot(recover.time(1:342566),recover_Imstd_smooth(i,1:342566),'Color',color(i,:),'Marker','.')
     hold on
 end
 ylim(YL)
