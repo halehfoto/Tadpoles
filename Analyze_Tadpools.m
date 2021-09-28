@@ -98,7 +98,7 @@ for i=1:size(motion,1)/2
     ylabel('Sum of all sensor Xings')
 
     subplot(3,1,3)
-    plot(decision_train_sum(i),'go')
+    plot([0.4,1.4],[decision_train_sum(i),decision_test_sum(i)],'go')
     hold on
     ylabel('Sum of all decisions')
 end
@@ -120,8 +120,9 @@ for i=1+size(motion,1)/2:size(motion,1)
     plot(motion_sum(i),'ro')
     hold on
     subplot(3,1,3)
-    plot(decision_train_sum(i),'ro')
+    plot([0.4,1.4],[decision_train_sum(i),decision_test_sum(i)],'ro')
     hold on
+    xlim([0,2])
 
 end
 
@@ -155,4 +156,3 @@ hold on
 plot(nanmedian(motion_tadpole(11:20,:)),'r')
 
 %ADD motion data for each sensor
-md=

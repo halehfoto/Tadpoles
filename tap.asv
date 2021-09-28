@@ -1,0 +1,7 @@
+a=arduino();
+configurePin(a,'D4','DigitalOutput')
+pause(10)
+writeDigitalPin(a,'D9',1);
+pause(5)
+writeDigitalPin(a,'D9',0);
+clear a
