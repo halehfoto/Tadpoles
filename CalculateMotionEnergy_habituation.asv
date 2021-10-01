@@ -7,20 +7,26 @@
 clearvars
 close all
 % path=uigetdir;
-path='C:\Users\Haleh\OneDrive - Harvard University\Documents\Tadpole Data\habituation\20210928'
+path='C:\Users\Haleh\OneDrive - Harvard University\Documents\Tadpole Data\habituation\20210930'
 cd(path)
 %read the avi file
-filename='WIN_20210928_13_51_30_Pro.mp4';
+filename='WIN_20210930_14_10_00_Pro.mp4';
 v=VideoReader(filename);
 numwells=input('Please enter the number of wells : ');
 nFrames=input('Please enter the number of frames to be analyzed enter [] to analyze all: ');
 if isempty(nFrames)
     nFrames=v.NumFrames;
 end
+
+%extract the value of the LED for each fram
 figure(1);
 I=read(v,1);
 imshow(I);
 hold on
+
+roi_LED = drawrectangle();
+keyboard
+
 
 color=jet(numwells);
 %this draws squares around each well that can be repositined by the user on
@@ -45,16 +51,20 @@ end
 subplot(2,1,2)
 hold on
 time=(1:1:nFrames-1)/(v.FrameRate);
-st=smooth(Imstd{i}(1:nFrames-1),50);
+st=smooth(Imstd{i}(1:nFrames-1),10);
+
 for i=1:numwells
     plot(time(round(10*v.FrameRate):nFrames-50),detrend(st(round(10*v.FrameRate):nFrames-50)),'Color',color(i,:),'LineWidth',1)
     xlabel('Time (s)') 
     ylabel('Movement Index')
 end
-%compare responses every five mintues
+stbpf=bandpass(Imstd{i},[0.1,7],v.FrameRate);
+figure
+plot(stbpf);
+figure;spectrogram(stbpf,200,10,0:0.01:5,v.FrameRate,'yaxis')%compare responses every five mintues
 % group=round(time/5);
 % [P,ANOVATAB,STATS]=kruskalwallis(smooth(Imstd{5}(1:nFrames-10),v.FrameRate*30),group)
 % figure
 % multcompare(STATS)
-save('WIN_20210928_13_51_30_Pro.mat')
+save('WIN_20210930_14_10_00_Pro.mat')
 % save('Fluox+Donepezil_tadpoles072721_recover.mat','-v7.3')
