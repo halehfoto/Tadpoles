@@ -3,10 +3,10 @@
 clearvars
 close all
 % path=uigetdir;
-path='C:\Users\Haleh\OneDrive - Harvard University\Documents\Tadpole Data\habituation\20210929'
+path='C:\Users\Haleh\OneDrive - Harvard University\Documents\Tadpole Data\habituation\20210930'
 cd(path)
 %read the avi file
-filename='WIN_20210929_18_42_12_Pro.mp4';
+filename='WIN_20210930_14_10_00_Pro.mp4';
 v=VideoReader(filename);
 numwells=input('Please enter the number of wells : ');
 nFrames=input('Please enter the number of frames to be analyzed enter [] to analyze all: ');
@@ -23,15 +23,21 @@ color=jet(numwells);
 %each well
 for i=1:numwells
       if i<=numwells/8
-        roi{i} = drawrectangle('Position',[320+(i-1)*81 81 64.0000 66],'Color',color(i,:));
+        roi{i} = drawrectangle('Position',[320+(i-1)*85 85 70.0000 70],'Color',color(i,:));
       elseif i<=numwells/4
-        roi{i} = drawrectangle('Position',[320+(i-1)*81 81 64.0000 66],'Color',color(i,:));
+        roi{i} = drawrectangle('Position',[320+(i-1)*85 85 70.0000 70],'Color',color(i,:));
       elseif i<=numwells/2
-          roi{i} = drawrectangle('Position',[320+(i-1)*81 81 64.0000 66],'Color',color(i,:));
+          roi{i} = drawrectangle('Position',[320+(i-1)*85 85 70.0000 70],'Color',color(i,:));
       else
-          roi{i} = drawrectangle('Position',[320+(i-1)*81 81 64.0000 66],'Color',color(i,:));
+          roi{i} = drawrectangle('Position',[320+(i-1)*85 85 70.0000 70],'Color',color(i,:));
       end
         
 
 end
 keyboard
+roi_LED=drawrectangle();
+keyboard
+for i=1:1%numwells
+    [welldata,leddata]=AnalyzeWell_singletadpole_LED(v,nFrames,roi{i},roi_LED);
+end
+    
