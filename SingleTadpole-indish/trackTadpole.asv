@@ -61,12 +61,12 @@ time=1/v.FrameRate:1/v.FrameRate:(nframes-1)/v.FrameRate;
 dlpm=lowpass(nanmean(d),0.2);
 figure;
 %find the stimulus time
-thresh_led=5;
+thresh_led=8;
 [PKSS,LOCSS]=findpeaks(LED,'MinPeakHeight',thresh_led,'MinPeakDistance',v.FrameRate*3);
 figure;
 plot(LED);
 hold on
-plot(LOCSS,LED(LOCSS),'r*')
+plot(PKSS,LED(LOCSS),'r*')
 thresh_amp=5;
 for i=1:length(LOCSS)
     line([time(LOCSS(i)),time(LOCSS(i))],[-1,5],'Color','g')

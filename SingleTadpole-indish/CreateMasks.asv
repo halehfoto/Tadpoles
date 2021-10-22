@@ -6,34 +6,24 @@ path='C:\Users\Haleh\OneDrive - Harvard University\Documents\Tadpole Data\habitu
 cd(path)
 %read the avi file
 filename='WIN_20211021_15_46_04_Pro';
-v=VideoReader(strcat(filename,'.mp4'));
+v=VideoReader(strcat(filename,');
 k=1;
 v.CurrentTime = 0;
 I1=readFrame(v);
 tadpolen=input('please enter the number of tadpoles:');
 figure(1)
 imshow(I1);
-color=jet(tadpolen);
-for i=1:tadpolen
-    
-    figure(1)
-    if i==1
-        ROI{i}=drawrectangle();
-    else
-        ROI{i}=drawrectangle('Position',ROI{i-1}.Position,'Color',color(i,:));
-    end
-    keyboard
 
+for i=1:tadpolen
+    figure(1)
+    ROI{i}=drawrectangle();
+    keyboard
     %crop image
     I1c{i}=imcrop(I1(:,:,1),ROI{i}.Position);
     figure;
     imshow(I1c{i})
     %define the circular mask
-    if i==1
-        ROI_c{i}=drawcircle();
-    else
-        ROI_c{i}=drawcircle('Center',ROI_c{i-1}.Center,'Radius',ROI_c{i-1}.Radius,'Color',color(i,:));
-    end
+    ROI_c{i}=drawcircle();
     keyboard
     imageSize= size(I1c{i});
     ci=[ROI_c{i}.Center,ROI_c{i}.Radius];
@@ -51,4 +41,4 @@ figure
 imshow(I1);
 ROI_LED=drawrectangle();
 keyboard
-save(strcat(filename,'_maskData.mat'))
+save('WIN_20211007_15_26_36_Pro_maskData.mat')
