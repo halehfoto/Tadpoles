@@ -1,4 +1,4 @@
-%this program generates masks for the analysis of motion
+%To analyze multi-well tadpole data at single tadpole level run this first to create masks for each vial. 
 clearvars
 close all
 % path=uigetdir;

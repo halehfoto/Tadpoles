@@ -61,12 +61,14 @@ time=1/v.FrameRate:1/v.FrameRate:(nframes-1)/v.FrameRate;
 dlpm=lowpass(nanmean(d),0.2);
 figure;
 %find the stimulus time
-[PKSS,LOCSS]=findpeaks(LED,'MinPeakHeight',15,'MinPeakDistance',v.FrameRate*3)
+thresh_led=15;
+[PKSS,LOCSS]=findpeaks(LED,'MinPeakHeight',thresh_led,'MinPeakDistance',v.FrameRate*3);
+thresh_amp=5;
 for i=1:length(LOCSS)
     line([time(LOCSS(i)),time(LOCSS(i))],[-1,5],'Color','g')
     hold on
     for j=1:tadpolen
-        if max([d(j,LOCSS(i)+1),d(j,LOCSS(i)+2),d(j,LOCSS(i)+3),d(j,LOCSS(i)+4)])>5
+        if max([d(j,LOCSS(i)+1),d(j,LOCSS(i)+2),d(j,LOCSS(i)+3),d(j,LOCSS(i)+4)])>thresh_amp
             Resp(j,i)=1;
         else
             Resp(j,i)=0;
