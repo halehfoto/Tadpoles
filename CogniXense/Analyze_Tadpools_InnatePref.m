@@ -50,7 +50,11 @@ for i=1:size(motion_tadpole,1)
 %     hold on
 %     hist(sensor_data(i,:),6)
 %     xlim([1,6])
+if length(time{i})<=size(motion_tadpole,2)
     motion_sum(i)=nansum(motion_tadpole(i,1:length(time{i})));
+else
+     motion_sum(i)=NaN;
+end
     decision_train_sum(i)=nansum(Dec_train_n(i,:));
 end
 for i=1:size(motion,1)
@@ -72,7 +76,6 @@ for i=1:size(motion,1)
 %     hold on
 %     hist(sensor_data(i,:),6)
 %     xlim([1,6])
-    motion_sum(i)=nansum(motion_tadpole(i,1:length(time{i})));
     decision_test_sum(i)=nansum(Dec_test_n(i,:));
 end
 figure
@@ -80,7 +83,7 @@ if ~exist('ip')
     ip=NaN(size(motion,1),1);
 end
 %for each group plot the decision data
-color={'r','b','c'};
+color=jet(ngroups);
 figure
 cnt=0;
 for k=1:ngroups
@@ -101,17 +104,17 @@ for k=1:ngroups
             dts=[NaN,NaN];
         end
         subplot(3,1,1)
-        plot([ip(i);dtr(1);dtr(end);dts(1);dts(end)],'Color',color{k},'LineStyle','-','Marker','o') %plot innate pref (if this is done for the training day), percent correct on the first training block, %correct on the last training block, percent correct on the first testing block, %correct on the last testing block
+        plot([ip(i);dtr(1);dtr(end);dts(1);dts(end)],'Color',color(k,:),'LineStyle','-','Marker','o') %plot innate pref (if this is done for the training day), percent correct on the first training block, %correct on the last training block, percent correct on the first testing block, %correct on the last testing block
         hold on
         xlabel('state');
         ylabel('decision accuracy')
         subplot(3,1,2)
-        plot(motion_sum(i),'Color',color{k},'Marker','o')
+        plot(motion_sum(i),'Color',color(k,:),'Marker','o')
         hold on
         ylabel('Sum of all sensor Xings')
 
         subplot(3,1,3)
-        plot([0.4,1.4],[decision_train_sum(i),decision_test_sum(i)],'Color',color{k},'Marker','o')
+        plot([0.4,1.4],[decision_train_sum(i),decision_test_sum(i)],'Color',color(k,:),'Marker','o')
         hold on
         ylabel('Sum of all decisions')
     end

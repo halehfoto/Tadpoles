@@ -14,6 +14,7 @@ data=load('innate_pref.mat');
 ip=data.Dec_test_p
 groups=unique(exp_end{:,2});
 ngroups=length(groups);
+ncond=input('please enter the number of conditions:');
 tadpools=cellstr(table2cell(motion(:,2)));
 %calculate the number of pools in each group
 for i=1:ngroups
@@ -82,7 +83,15 @@ if ~exist('ip')
     ip=NaN(size(motion,1),1);
 end
 %for each group plot the decision data
-color={'c','b','r'};
+for i=1:ngroups
+    if i<=(ngroups/ncond)
+        color{i}='g';
+    elseif i>(ngroups/ncond)& i<=2*(ngroups/ncond)
+        color{i}='b';
+    else
+        color{i}='r';
+    end
+end
 figure
 cnt=0;
 for k=1:ngroups
@@ -104,11 +113,16 @@ for k=1:ngroups
         end
 
         subplot(2,1,1)
-        plot([ip(i,1);dtr(1);dts(1)],'Color',color{k},'LineStyle','-','Marker','o') %plot innate pref (if this is done for the training day), percent correct on the first training block, %correct on the last training block, percent correct on the first testing block, %correct on the last testing block
+        if k<=(ngroups/ncond)
+            plot([1,2,3],[nanmean(ip(i,:)),nanmean(dtr),nanmean(dts)],'LineStyle','none','Marker','o','Color',color{k})
+        elseif k>(ngroups/ncond)& k<=2*(ngroups/ncond)
+            plot([1.25,2.25,3.25],[nanmean(ip(i,:)),nanmean(dtr),nanmean(dts)],'LineStyle','none','Marker','o','Color',color{k})
+        else
+            plot([1.5,2.5,3.5],[nanmean(ip(i,:)),nanmean(dtr),nanmean(dts)],'LineStyle','none','Marker','o','Color',color{k})
+        end            
         hold on
         xlabel('state');
         ylabel('decision accuracy')
-        xlim([0.5,3.5])
 %         subplot(3,1,3)
 %         plot([0.4,1.4],[decision_train_sum(i),decision_test_sum(i)],'Color',color{k},'Marker','o')
 %         hold on
@@ -118,7 +132,7 @@ for k=1:ngroups
         ip1{k}(i-cnt)=ip(i,1);
     end
     subplot(2,1,2)
-    histogram(motion_sum(1+cnt:npools(k)+cnt),5,'FaceColor',color{k},'FaceAlpha',0.5,'Normalization','Probability')
+    histogram(motion_sum(1+cnt:npools(k)+cnt),10,'FaceColor',color{k},'FaceAlpha',0.5,'Normalization','Probability')
     hold on
     ylabel('Sum of all sensor Xings')
 
