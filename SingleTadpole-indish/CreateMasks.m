@@ -1,11 +1,10 @@
 %To analyze multi-well tadpole data at single tadpole level run this first to create masks for each vial. 
 clearvars
 close all
-% path=uigetdir;
-path='C:\Users\Haleh\OneDrive - Harvard University\Documents\Tadpole Data\habituation\20211021\ISI 4s'
+path=uigetdir;
 cd(path)
 %read the avi file
-filename='WIN_20211021_15_46_04_Pro';
+filename='20220224_11_22_57_nT50_ISI3_IBI0m_nB1_R0_WC1_Pre';
 v=VideoReader(strcat(filename,'.mp4'));
 k=1;
 v.CurrentTime = 0;

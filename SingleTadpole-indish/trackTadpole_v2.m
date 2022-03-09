@@ -4,7 +4,7 @@ clearvars
 path=uigetdir;
 cd(path)
 %read the avi file
-filename='20220215_11_28_27__nT10_ISI3s_IBI3m_nB5_R30m';
+filename='20220301_11_54_44_nT20_ISI3_IBI0m_nB1_R0_WC22_130in';
 load(strcat(filename,'_maskData.mat')); 
 v=VideoReader(strcat(filename,'.mp4'));
 k=1;
@@ -18,24 +18,29 @@ if isempty(nframes)
     nframes=v.NumFrames;
 end
 %find the threshold for binarizing:
-% figure;
-I1ct=imcrop(I1(:,:,1),ROI{1}.Position);
+figure;
+I1ct=imcrop(I1(:,:,1),ROI{11}.Position);
 imshow(I1ct)
-thresh_im=0.3;
+thresh_im=0.3;%no screen
+% thresh_im=0.32;%with screen
+
 figure
-I1bwt=im2bw(I1ct,thresh_im);
+I1bwt=im2bw(I1ct(:,:,1),thresh_im);
 imshow(I1bwt)
 figure;
-imshow(I1ct)
+I1bwt=im2bw(I1(:,:,1),thresh_im);
+imshow(I1bwt)
 tic
-figure
+%figure
 while hasFrame(v) && k<nframes
     %for each tadpole, apply the mask and calculate center of mass 
     %convert to bw and detect center of mass
+    I1bwt=im2bw(I1(:,:,1),thresh_im);
+    
     for i=1:tadpolen
-        I1c{i}=imcrop(I1(:,:,1),ROI{i}.Position);
-        I1bw{i}=im2bw(I1c{i},thresh_im);
-        BW=1-I1bw{i};
+        I1c=imcrop(I1bwt,ROI{i}.Position);
+        %I1bw{i}=im2bw(I1c{i},thresh_im);
+        BW=1-I1c;
 %         figure;imshow(BW)
         CC=bwconncomp(BW);
         %Determine which is the largest component in the image
@@ -47,6 +52,7 @@ while hasFrame(v) && k<nframes
         for m=1:length(index)
             BW(CC.PixelIdxList{index(m)}) = 0;
         end
+        
 %         figure;imshow(BW)
         C=regionprops(BW,'Centroid');
         if ~isempty(C)
@@ -61,25 +67,28 @@ while hasFrame(v) && k<nframes
     LED(k)=std2(LEDDiff);%calculate standard deviation across all pixel values within ROI
     k=k+1;
 
-    for i=1:tadpolen
-        I1c{i}=imcrop(I1(:,:,1),ROI{i}.Position);
-        for ii=1:size(mask{i},1)
-            for j=1:size(mask{i},2)
-                if mask{i}(ii,j)==0
-                    I1c{i}(ii,j)=150;
-                end
-            end
-        end
-    end
+%     for i=1:tadpolen
+%         I1c{i}=imcrop(I1(:,:,1),ROI{i}.Position);
+%         for ii=1:size(mask{i},1)
+%             for j=1:size(mask{i},2)
+%                 if mask{i}(ii,j)==0
+%                     I1c{i}(ii,j)=150;
+%                 end
+%             end
+%         end
+%     end
 
     
 end
+toc
 %calculate the displacement
 for ii=1:tadpolen
     for i=2:length(cent{ii})
         d(ii,i-1)=norm(cent{ii}(i,:)-cent{ii}(i-1,:));
     end
 end
+
+figure;hold on;plot(d(1,:),'k*');plot(movmean(d(1,:),3),'r')
 time=1/v.FrameRate:1/v.FrameRate:(nframes-1)/v.FrameRate;
 % dlpm=lowpass(nanmean(d),0.2);
 figure;
@@ -90,36 +99,57 @@ figure;
 plot(time,LED);
 hold on
 plot(time(LOCSS),LED(LOCSS),'r*')
-thresh_amp=10;
 for i=1:length(LOCSS)
-    line([time(LOCSS(i)),time(LOCSS(i))],[-1,5],'Color','g')
+    %line([time(LOCSS(i)),time(LOCSS(i))],[-1,5],'Color','g')
     hold on
     for j=1:tadpolen
-        if max([d(j,LOCSS(i)+1),d(j,LOCSS(i)+2),d(j,LOCSS(i)+3),d(j,LOCSS(i)+4)])>thresh_amp
+
+        dm(j,:)=movmean(d(j,:),3);
+        thresh=4*nanstd(dm(j,:));
+        dmd(j,:)=diff(dm(j,:));
+        %if the tadpole was not swimming a lot when the LED flashed and
+        %startled after
+%         if dm(j,LOCSS(i)-3)> thresh
+%             Resp(j,i)=NaN;
+%         elseif max([dm(j,LOCSS(i)+1),dm(j,LOCSS(i)+2),dm(j,LOCSS(i)+3),dm(j,LOCSS(i)+4),dm(j,LOCSS(i)+5)])>thresh
+%             Resp(j,i)=1;
+%         else
+%             Resp(j,i)=0;
+% 
+%         end
+        Max_rate=max([dmd(j,LOCSS(i)),dmd(j,LOCSS(i)+1),dmd(j,LOCSS(i)+2),dmd(j,LOCSS(i)+3),dmd(j,LOCSS(i)+4)]);
+        if dmd(j,LOCSS(i)-5)> 1 || Max_rate>10
+            Resp(j,i)=NaN;
+        elseif Max_rate>1 && Max_rate<10
             Resp(j,i)=1;
         else
             Resp(j,i)=0;
 
         end
+
     end
 end
 figure
-plot(time(2:end),d,'LineWidth',1)
+plot(time(2:end),dm(1,:),'LineWidth',1)
 hold on
-plot(time,LED)
-hold on
+plot(time,LED/max(LED))
+% hold on
 figure;
-plot(time, LED);
-hold on
+% plot(time, LED/max(LED));
+% hold on
+close all
 for i=1:tadpolen
-    subplot(tadpolen,1,i)
-    plot(time(2:end),d(i,:))
+    %subplot(tadpolen,1,i)
+    figure
+    plot(time(2:end),dm(i,:))
+    hold on
+    %plot(time(2:end),d(i,:),'r')
     hold on
     for j=1:length(LOCSS)
-        line([time((LOCSS(j))+1),time((LOCSS(j))+1)],[-1,15],'Color','g')
+        line([time((LOCSS(j))+1),time((LOCSS(j))+1)],[0,1],'Color','g')
         hold on
         if Resp(i,j)==1
-            plot(time((LOCSS(j)+1)),5,'r*')
+            plot(time((LOCSS(j)+1)),1,'r*')
         else
             plot(time((LOCSS(j)+1)),0,'k*')
         end
@@ -127,45 +157,16 @@ for i=1:tadpolen
 %     xlim([0,700])
     %axis tight
 end
-%the first LED light is missing
-figure; 
-%plot(1:20,[1,mean(Resp(:,1:19),1)])
-% for i=1:1
-%     x=(20*(i-1)+1:20*i)';
-%     y=(mean(Resp(:,20*(i-1)+1:20*i),1))';
-%     f=fit(x,y,'exp1');
-%     plot(x,y)
-%     hold on
-%     plot(f,x,y)
-%     legend 'off'
-% end
-close all
-resp_prob=mean(Resp,1);
-hold on
+dm_pool=[];
+for i=1:tadpolen
+    dm_pool=[dm_pool,dm(i,:)];
+
+end
+resp_prob=nanmean(Resp,1);
+figure;plot(resp_prob,'g*-');hold on
+f=fit((1:1:20)',(resp_prob(1:20))','exp1');plot(f,(1:1:20)',(resp_prob(1:20))')
 save(strcat(filename,'_analyzed.mat'))
-% f=fit((1:1:20)',(resp_prob(1:20))','exp1')
-% figure(1); plot(f,(1:1:20)',(resp_prob(1:20))');hold on
-% plot(1:1:20,resp_prob(1:20),'g*');hold on
-% 
-% f2=fit((21:1:40)',(resp_prob(21:40))','exp1');
-% plot(f2,(21:1:40)',(resp_prob(21:40))');hold on
-% plot((21:1:40),resp_prob(21:40),'b*');hold on
-% 
-% f3=fit((41:1:60)',(resp_prob(41:60))','exp1');
-% plot(f3,(41:1:60)',(resp_prob(41:60))');hold on
-% plot(41:1:60,resp_prob(41:60),'m*');hold on
-% 
-% f4=fit((101:1:120)',(resp_prob(101:120))','exp1');
-%  plot(f4,((101:1:120))',(resp_prob(101:120))');hold on
-% plot((101:1:120),resp_prob(101:120),'c*');hold on
-% 
-% f5=fit((121:1:140)',(resp_prob(121:140))','exp1');
-%  plot(f5,((121:1:140))',(resp_prob(121:140))');hold on
-% plot((121:1:140),resp_prob(121:140),'c*');hold on
-% 
-% f6=fit((141:1:160)',(resp_prob(141:160))','exp1');
-%  plot(f6,((141:1:160))',(resp_prob(141:160))');hold on
-% plot((141:1:160),resp_prob(141:160),'c*');hold on
+
 
 toc
 
