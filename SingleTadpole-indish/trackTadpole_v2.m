@@ -4,7 +4,7 @@ clearvars
 path=uigetdir;
 cd(path)
 %read the avi file
-filename='20220301_11_54_44_nT20_ISI3_IBI0m_nB1_R0_WC22_130in';
+filename='20220308_17_40_18_nT20_ISI3_IBI0m_nB1_R0_KB-R5uM_post';
 load(strcat(filename,'_maskData.mat')); 
 v=VideoReader(strcat(filename,'.mp4'));
 k=1;

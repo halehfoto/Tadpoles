@@ -5,7 +5,7 @@ path=uigetdir;
 cd(path)
 
 load('20well_24wp_maskData.mat')
-filename='20220308_17_29_50_KB-R5uM_post_baseline';
+filename='20220308_15_22_51_KB-R10uM_120in_baseline';
 v=VideoReader(strcat(filename,'.mp4'));
 k=1;
 v.CurrentTime = 0;
