@@ -6,11 +6,13 @@
 %deviation of that image and provides one number as the output.
 clearvars
 close all
-% path=uigetdir;
-path='C:\Users\Haleh\Dropbox (HMS)\Biostasis\video_temp\Haleh_Tadpole_Videos/'
+path='\\files.med.harvard.edu\Wyss Institute\Microengineering Xenopus\Biostasis\Tadpole Videos _ Drug Treatments\Vidoes_for_MS'
 cd(path)
+
+path2=uigetdir;
+cd(path2)
 %read the avi file
-filename='Fenofibrate.mp4';
+filename=uigetfile;
 v=VideoReader(filename);
 numwells=input('Please enter the number of wells : ');
 nFrames=input('Please enter the number of frames to be analyzed enter [] to analyze all: ');
