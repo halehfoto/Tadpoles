@@ -28,10 +28,10 @@ for i=1:length(filenames_Test)
 end
 figure
 title('training')
-for i=1:1%9
+for i=1:1
     
     resp_prob(i,:)=nanmean(Resp_Train(:,(50*(i-1)+1:50*i)),1);
-    plot((50*(i-1)+1:1:50*i),resp_prob(i,:),'*');hold on
+    plot((50*(i-1)+1:1:50*i),resp_prob(i,:),'k*');hold on
     f=fit(((50*(i-1)+1:1:50*i))',(resp_prob(i,:))','exp1');plot(f,((50*(i-1)+1:1:50*i))',(resp_prob(i,:))')
 end
 legend off
@@ -39,10 +39,10 @@ legend off
 
 %% analyze Testing
 title('Testing')
-for i=15:17
-    j=i-14;
+for i=3:5
+    j=i-2;
     resp_prob(i,:)=nanmean(Resp_Test(:,(50*(j-1)+1:50*j)),1);
-    plot((50*(i-1)+1:1:50*i),resp_prob(i,:),'*');hold on
+    plot((50*(i-1)+1:1:50*i),resp_prob(i,:),'k*');hold on
     f=fit(((50*(i-1)+1:1:50*i))',(resp_prob(i,:))','exp1');plot(f,((50*(i-1)+1:1:50*i))',(resp_prob(i,:))')
 end
 legend off

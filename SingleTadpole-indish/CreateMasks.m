@@ -4,7 +4,7 @@ close all
 path=uigetdir;
 cd(path)
 %read the avi file
-filename='20220224_11_22_57_nT50_ISI3_IBI0m_nB1_R0_WC1_Pre';
+filename='20221111_10_34_08_WB1_D1_090_Pre_baseline_SG';
 v=VideoReader(strcat(filename,'.mp4'));
 k=1;
 v.CurrentTime = 0;
@@ -50,4 +50,5 @@ figure
 imshow(I1);
 ROI_LED=drawrectangle();
 keyboard
-save(strcat(filename,'_maskData.mat'))
+save('20well_24wp_maskData.mat')
+% save('20220712_16_28_55_nT20_ISI3s_IBI0_nB1_R0_100_DLTBOA_D2_300_In_SG_maskData.mat')

@@ -4,10 +4,12 @@ clearvars
 path=uigetdir;
 cd(path)
 %read the avi file
-filename='';
-load(strcat(filename,'_maskData.mat'),'ROI','ROI_LED'); 
+filenames=dir('*nT20*.mp4');
+for ii=1:length(filenames)
+filename=filenames(ii).name;
+load(strcat(filename(1:end-4),'_maskData.mat'),'ROI','ROI_LED'); 
 
-v=VideoReader(strcat(filename,'.mp4'));
+v=VideoReader(filename);
 k=1;
 v.CurrentTime = 0;
 I1=readFrame(v);
@@ -22,19 +24,19 @@ if isempty(nframes)
     nframes=v.NumFrames;
 end
 %find the threshold for binarizing:
-figure;
+% figure;
 I1ct=imcrop(I1(:,:,1),ROI{11}.Position);
-imshow(I1ct)
-thresh_im=0.32;%no screen
+ imshow(I1ct)
+thresh_im=0.30;%no screen
 % thresh_im=0.32;%with screen
 
-figure
+%figure
 I1bwt=im2bw(I1ct(:,:,1),thresh_im);
-imshow(I1bwt)
-figure;
+%imshow(I1bwt)
+%figure;
 I1bwt=im2bw(I1(:,:,1),thresh_im);
-imshow(I1bwt)
-close all
+%imshow(I1bwt)
+% close all
 tic
 %figure
 while hasFrame(v) && k<nframes
@@ -93,17 +95,11 @@ for ii=1:tadpolen
     end
 end
 
-figure;hold on;plot(d(1,:),'k*');plot(movmean(d(1,:),3),'r')
 time=1/v.FrameRate:1/v.FrameRate:(nframes-1)/v.FrameRate;
 % dlpm=lowpass(nanmean(d),0.2);
-figure;
 %find the stimulus time
-thresh_led=30;
+thresh_led=50;
 [PKSS,LOCSS]=findpeaks(LED,'MinPeakHeight',thresh_led,'MinPeakDistance',v.FrameRate*2);
-figure;
-plot(time,LED);
-hold on
-plot(time(LOCSS),LED(LOCSS),'r*')
 for i=1:length(LOCSS)
     %line([time(LOCSS(i)),time(LOCSS(i))],[-1,5],'Color','g')
     hold on
@@ -134,47 +130,20 @@ for i=1:length(LOCSS)
 
     end
 end
-figure
-plot(time(2:end),dm(1,:),'LineWidth',1)
-hold on
-plot(time,LED/max(LED))
-% hold on
-figure;
-% plot(time, LED/max(LED));
-% hold on
-close all
-for i=1:tadpolen
-    %subplot(tadpolen,1,i)
-    figure
-    plot(time(2:end),dm(i,:))
-    hold on
-    %plot(time(2:end),d(i,:),'r')
-    hold on
-    for j=1:length(LOCSS)
-        line([time((LOCSS(j))+1),time((LOCSS(j))+1)],[0,1],'Color','g')
-        hold on
-        if Resp(i,j)==1
-            plot(time((LOCSS(j)+1)),1,'r*')
-        else
-            plot(time((LOCSS(j)+1)),0,'k*')
-        end
-    end
-%     xlim([0,700])
-    %axis tight
-end
+
 dm_pool=[];
 for i=1:tadpolen
     dm_pool=[dm_pool,dm(i,:)];
 
 end
-resp_prob=NaN(tadpolen,1)
+resp_prob=NaN(tadpolen,1);
 resp_prob(1:length(LOCSS))=nanmean(Resp,1);
     
-figure;plot(resp_prob,'g*-');hold on
+% figure;plot(resp_prob,'g*-');hold on
 % f=fit((1:1:20)',(resp_prob(1:20))','exp1');plot(f,(1:1:20)',(resp_prob(1:20))')
-save(strcat(filename,'_analyzed.mat'))
-
-
+save(strcat(filename(1:end-4),'_analyzed.mat'))
+clearvars -except filenames
+end
 toc
 
 

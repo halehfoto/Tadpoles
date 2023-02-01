@@ -29,6 +29,7 @@ V{1}=Mov{2}{1};
 x=length(V{1})-1;
 MM=movmean(V{1}(2:x)/V{1}(2),10);
 figure;plot(Rec_Time{b}(2:x),MM/MM(1),'k')
+Vehicle=MM/MM(1);
 hold on
 
 SNC80_100uM=Mov{1}{2};
