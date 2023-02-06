@@ -27,12 +27,12 @@ end
 % figure;
 I1ct=imcrop(I1(:,:,1),ROI{11}.Position);
  imshow(I1ct)
-thresh_im=0.30;%no screen
-% thresh_im=0.32;%with screen
+%thresh_im=0.3;%no screen
+ thresh_im=0.32;%with screen
 
-%figure
+figure
 I1bwt=im2bw(I1ct(:,:,1),thresh_im);
-%imshow(I1bwt)
+imshow(I1bwt)
 %figure;
 I1bwt=im2bw(I1(:,:,1),thresh_im);
 %imshow(I1bwt)
@@ -89,9 +89,9 @@ while hasFrame(v) && k<nframes
 end
 toc
 %calculate the displacement
-for ii=1:tadpolen
-    for i=2:length(cent{ii})
-        d(ii,i-1)=norm(cent{ii}(i,:)-cent{ii}(i-1,:));
+for jj=1:tadpolen
+    for i=2:length(cent{jj})
+        d(jj,i-1)=norm(cent{jj}(i,:)-cent{jj}(i-1,:));
     end
 end
 
@@ -101,13 +101,19 @@ time=1/v.FrameRate:1/v.FrameRate:(nframes-1)/v.FrameRate;
 thresh_led=50;
 [PKSS,LOCSS]=findpeaks(LED,'MinPeakHeight',thresh_led,'MinPeakDistance',v.FrameRate*2);
 for i=1:length(LOCSS)
-    %line([time(LOCSS(i)),time(LOCSS(i))],[-1,5],'Color','g')
-    hold on
+   % line([time(LOCSS(i)),time(LOCSS(i))],[-1,5],'Color','g')
+%     hold on
     for j=1:tadpolen
 
         dm(j,:)=movmean(d(j,:),2);
         thresh=4*nanstd(dm(j,:));
         dmd(j,:)=diff(dm(j,:));
+%         figure(j);plot(time, LED/max(LED))
+%     hold on
+%     plot(time(LOCSS),2*PKSS/max(PKSS),'g*')
+%    figure(j)
+%     plot(time(2:end),dm(j,:),'k')
+% 
         %if the tadpole was not swimming a lot when the LED flashed and
         %startled after
 %         if dm(j,LOCSS(i)-3)> thresh
@@ -127,6 +133,17 @@ for i=1:length(LOCSS)
             Resp(j,i)=0;
 
         end
+%         hold on
+%         if Resp(j,i)==1
+%             plot(time(LOCSS(i)), 5,'r*')
+%         elseif Resp(j,i)==0
+%             plot(time(LOCSS(i)), 5,'b*')
+%         else
+%              plot(time(LOCSS(i)), 5,'c*')
+%         end
+            
+
+            
 
     end
 end
