@@ -2,11 +2,10 @@
 %it.
 clearvars
 close all
-path='\\research.files.med.harvard.edu\Wyss Institute\Levin Lab\Haleh';
-cd(path)
-path2=uigetdir;
-cd(path2)
-filename=uigetfile;
+% path2=uigetdir;
+% cd(path2)
+%filename=uigetfile;
+filename='WIN_20221102_13_28_19_Pro.mp4';
 speedup=input('Please enter the time interval you need in between frames in seconds:') 
 v1=VideoReader(filename);
 
