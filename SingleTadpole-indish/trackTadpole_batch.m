@@ -28,7 +28,8 @@ end
 I1ct=imcrop(I1(:,:,1),ROI{11}.Position);
  imshow(I1ct)
 %thresh_im=0.3;%no screen
- thresh_im=0.32;%with screen
+% thresh_im=0.32;%with screen
+    thresh_im=0.43;%with screen top and side
 
 figure
 I1bwt=im2bw(I1ct(:,:,1),thresh_im);
@@ -141,7 +142,7 @@ for i=1:length(LOCSS)
 %         else
 %              plot(time(LOCSS(i)), 5,'c*')
 %         end
-            
+%             
 
             
 
@@ -157,7 +158,7 @@ resp_prob=NaN(tadpolen,1);
 resp_prob(1:length(LOCSS))=nanmean(Resp,1);
     
 % figure;plot(resp_prob,'g*-');hold on
-% f=fit((1:1:20)',(resp_prob(1:20))','exp1');plot(f,(1:1:20)',(resp_prob(1:20))')
+% f=fit((1:1:20)',(resp_prob(1:20)),'exp1');plot(f,(1:1:20)',(resp_prob(1:20))')
 save(strcat(filename(1:end-4),'_analyzed.mat'))
 clearvars -except filenames
 end
