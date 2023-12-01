@@ -232,6 +232,12 @@ f=fit((1:L-1)',(resp_prob_Pre_D1(1:L-1))','exp1');plot(f,(1:1:L-1)',(resp_prob_P
 % 
 if Stim_In
     resp_prob_in_D1=nanmean(Resp_in_D1,1);
+    if sum(isnan( resp_prob_in_D1))==0
+        L=21;
+    else
+        L=find(isnan( resp_prob_in_D1),1);
+    end
+
     plot((21:1:20+L-1)',resp_prob_in_D1(1:L-1),'*');hold on
     f=fit((21:1:20+L-1)',(resp_prob_in_D1(1:L-1))','exp1');plot(f,(21:1:20+L-1)',(resp_prob_in_D1(1:L-1))')
 end
@@ -249,9 +255,17 @@ if ~isempty(Resp_2h_D1)
     f=fit((41:1:40+L-1)',(resp_prob_2h_D1(1:L-1))','exp1');plot(f,(41:1:40+L-1)',(resp_prob_2h_D1(1:L-1))')
 end
 if ~isempty(Resp_3h_D1)
-    resp_prob_3h_D1=nanmean(Resp_3h_D1,1);
-    plot((61:1:80)',resp_prob_3h_D1,'*');hold on
-    f=fit((61:1:80)',(resp_prob_3h_D1)','exp1');plot(f,(61:1:80)',(resp_prob_3h_D1)')
+   resp_prob_3h_D1=nanmean(Resp_3h_D1,1);
+
+    if sum(isnan(resp_prob_3h_D1))==0
+        L=21;
+    else
+        L=find(isnan(resp_prob_3h_D1),1);
+    end
+
+    plot((61:1:60+L-1)',resp_prob_3h_D1(1:L-1),'*');hold on
+    f=fit((61:1:60+L-1)',(resp_prob_3h_D1(1:L-1))','exp1');plot(f,(61:1:60+L-1)',(resp_prob_3h_D1(1:L-1))')
+
 end
 if ~isempty(Resp_5h_D1)
     resp_prob_5h_D1=nanmean(Resp_5h_D1,1);
@@ -364,8 +378,15 @@ if length(Drugs)>1
     end
     if ~isempty(Resp_3h_D2)
         resp_prob_3h_D2=nanmean(Resp_3h_D2,1);
-        plot((61:1:80)',resp_prob_3h_D2,'*');hold on
-        f=fit((61:1:80)',(resp_prob_3h_D2)','exp1');plot(f,(61:1:80)',(resp_prob_3h_D2)')
+        
+        if sum(isnan(resp_prob_3h_D2))==0
+            L=21;
+        else
+            L=find(isnan(resp_prob_3h_D2),1);
+        end
+
+        plot((61:1:60+L-1)',resp_prob_3h_D2(1:L-1),'*');hold on
+        f=fit((61:1:60+L-1)',(resp_prob_3h_D2(1:L-1))','exp1');plot(f,(61:1:60+L-1)',(resp_prob_3h_D2(1:L-1))')
     end
     
     if ~isempty(Resp_5h_D2)
@@ -479,8 +500,14 @@ if length(Drugs)>1
     end
     if ~isempty(Resp_3h_D3)
         resp_prob_3h_D3=nanmean(Resp_3h_D3,1);
-        plot((61:1:80)',resp_prob_3h_D3,'*');hold on
-        f=fit((61:1:80)',(resp_prob_3h_D3)','exp1');plot(f,(61:1:80)',(resp_prob_3h_D3)')
+        if sum(isnan(resp_prob_3h_D3))==0
+            L=21;
+        else
+            L=find(isnan(resp_prob_3h_D3),1);
+        end
+
+        plot((61:1:60+L-1)',resp_prob_3h_D3(1:L-1),'*');hold on
+        f=fit((61:1:60+L-1)',(resp_prob_3h_D3(1:L-1))','exp1');plot(f,(61:1:60+L-1)',(resp_prob_3h_D3(1:L-1))')
     end
     
     if ~isempty(Resp_5h_D3)
@@ -495,7 +522,127 @@ if length(Drugs)>1
     xlabel('trials')
     ylabel('startle probability')
 end
+%% Do the same for D4
 
+if length(Drugs)>1
+    Resp_Pre_D4=[];
+    for i=1:length(filenames_Pre{4})
+        d=load(filenames_Pre{4}(i).name);
+        if size(d.Resp,2)<20
+            temp=[d.Resp,NaN(20,20-size(d.Resp,2))];
+        else
+            temp=d.Resp(:,1:20);
+        end
+        
+        Resp_Pre_D4=[Resp_Pre_D4;temp];
+    end
+    
+    if Stim_In
+        Resp_in_D4=[];
+        for i=1:length(filenames_in{4})
+            d=load(filenames_in{4}(i).name);
+            if size(d.Resp,2)<20
+                temp=[d.Resp,NaN(20,20-size(d.Resp,2))];
+            else
+                temp=d.Resp(:,1:20);
+            end
+
+            Resp_in_D4=[Resp_in_D4;temp];
+        end
+    end
+    
+    Resp_2h_D4=[];
+    for i=1:length(filenames_2h{4})
+        d=load(filenames_2h{4}(i).name);
+        if size(d.Resp,2)<20
+            temp=[d.Resp,NaN(20,20-size(d.Resp,2))];
+        else
+            temp=d.Resp(:,1:20);
+        end
+        Resp_2h_D4=[Resp_2h_D4;temp];
+        
+    end
+    
+    Resp_3h_D4=[];
+    for i=1:length(filenames_3h{4})
+        d=load(filenames_3h{4}(i).name);
+        if size(d.Resp,2)<20
+            temp=[d.Resp,NaN(20,20-size(d.Resp,2))];
+        else
+            temp=d.Resp(:,1:20);
+        end
+
+        Resp_3h_D4=[Resp_3h_D4;temp];
+    end
+    Resp_5h_D4=[];
+    for i=1:length(filenames_5h{4})
+        d=load(filenames_5h{4}(i).name);
+        if size(d.Resp,2)<20
+            temp=[d.Resp,NaN(20,20-size(d.Resp,2))];
+        else
+            temp=d.Resp(:,1:20);
+        end
+
+        Resp_5h_D4=[Resp_5h_D4;temp];
+    end
+    
+    
+    resp_prob_Pre_D4=nanmean(Resp_Pre_D4,1);
+    if sum(isnan(resp_prob_Pre_D4))==0
+        L=21;
+    else
+        L=find(isnan(resp_prob_Pre_D4),1);
+    end
+
+    figure;title('Control'); plot(resp_prob_Pre_D4,'*');hold on
+    f=fit((1:1:L-1)',(resp_prob_Pre_D4(1:L-1))','exp1');plot(f,(1:1:L-1)',(resp_prob_Pre_D4(1:L-1))')
+    
+    if Stim_In
+        resp_prob_in_D4=nanmean(Resp_in_D4,1);
+        if sum(isnan(resp_prob_in_D4))==0
+            L=21;
+        else
+            L=find(isnan(resp_prob_in_D4),1);
+        end
+
+        plot((21:1:20+L-1)',resp_prob_in_D4(1:L-1),'*');hold on
+        f=fit((21:1:20+L-1)',(resp_prob_in_D4(1:L-1))','exp1');plot(f,(21:1:20+L-1)',(resp_prob_in_D4((1:L-1)))')
+    end
+    if ~isempty(Resp_2h_D4)
+        resp_prob_2h_D4=nanmean(Resp_2h_D4,1);
+        if sum(isnan(resp_prob_2h_D4))==0
+            L=21;
+        else
+            L=find(isnan(resp_prob_2h_D4),1);
+        end
+
+        plot((41:1:40+L-1)',resp_prob_2h_D4(1:L-1),'*');hold on
+        f=fit((41:1:40+L-1)',(resp_prob_2h_D4(1:L-1))','exp1');plot(f,(41:1:40+L-1)',(resp_prob_2h_D4(1:L-1))')
+    end
+    if ~isempty(Resp_3h_D4)
+        resp_prob_3h_D4=nanmean(Resp_3h_D4,1);
+        if sum(isnan(resp_prob_3h_D4))==0
+            L=21;
+        else
+            L=find(isnan(resp_prob_3h_D4),1);
+        end
+
+        plot((61:1:60+L-1)',resp_prob_3h_D4(1:L-1),'*');hold on
+        f=fit((61:1:60+L-1)',(resp_prob_3h_D4(1:L-1))','exp1');plot(f,(61:1:60+L-1)',(resp_prob_3h_D4(1:L-1))')
+    end
+    
+    if ~isempty(Resp_5h_D4)
+        resp_prob_5h_D4=nanmean(Resp_5h_D4,1);
+        plot((81:1:100)',resp_prob_5h_D4,'*');hold on
+        f=fit((81:1:100)',(resp_prob_5h_D4)','exp1');plot(f,(81:1:100)',(resp_prob_5h_D4)')
+    end
+    
+    legend 'off'
+    ylim([0,1]);
+    title(Drugs{4})
+    xlabel('trials')
+    ylabel('startle probability')
+end
 %% compare baseline activities
 %control 1
 thresh=0.5
@@ -621,12 +768,12 @@ All_dmsum_groups=[ones(size(dmsum_Pre_D1)),2*ones(size(dmsum_in_D1))];
 [a,b,STATS]=kruskalwallis(All_dmsum,All_dmsum_groups)
 title(strcat(Drugs{1},'-60minTreatment'))
 
-All_dmsum=[dmsum_Pre_D1,dmsum_in_D1,dmsum_2h_D1];
-All_dmsum_groups=[ones(size(dmsum_Pre_D1)),2*ones(size(dmsum_in_D1)),3*ones(size(dmsum_2h_D1))];
-[a,b,STATS]=kruskalwallis(All_dmsum,All_dmsum_groups)
-title(strcat(Drugs{1},'-300minTreatment, 2h recovery'))
-figure
-[c,m,h,nms]=multcompare(STATS)
+% All_dmsum=[dmsum_Pre_D1,dmsum_in_D1,dmsum_2h_D1];
+% All_dmsum_groups=[ones(size(dmsum_Pre_D1)),2*ones(size(dmsum_in_D1)),3*ones(size(dmsum_2h_D1))];
+% [a,b,STATS]=kruskalwallis(All_dmsum,All_dmsum_groups)
+% title(strcat(Drugs{1},'-300minTreatment, 2h recovery'))
+% figure
+% [c,m,h,nms]=multcompare(STATS)
 
 All_dmsum=[dmsum_Pre_D1,dmsum_in_D1,dmsum_3h_D1];
 All_dmsum_groups=[ones(size(dmsum_Pre_D1)),2*ones(size(dmsum_in_D1)),3*ones(size(dmsum_3h_D1))];
@@ -704,12 +851,12 @@ title(strcat(Drugs{2},'-90minTreatment'))
 figure
 multcompare(STATS)
 
-All_dmsum=[dmsum_Pre_D2,dmsum_in_D2,dmsum_2h_D2];
-All_dmsum_groups=[ones(size(dmsum_Pre_D1)),2*ones(size(dmsum_in_D2)),3*ones(size(dmsum_2h_D2))];
-[a,b,STATS]=kruskalwallis(All_dmsum,All_dmsum_groups)
-title(strcat(Drugs{2},'-300minTreatment, 2h recovery'))
-figure
-[c,m,h,nms]=multcompare(STATS)
+% All_dmsum=[dmsum_Pre_D2,dmsum_in_D2,dmsum_2h_D2];
+% All_dmsum_groups=[ones(size(dmsum_Pre_D1)),2*ones(size(dmsum_in_D2)),3*ones(size(dmsum_2h_D2))];
+% [a,b,STATS]=kruskalwallis(All_dmsum,All_dmsum_groups)
+% title(strcat(Drugs{2},'-300minTreatment, 2h recovery'))
+% figure
+% [c,m,h,nms]=multcompare(STATS)
 
 %% %% do the same for drug 3
 

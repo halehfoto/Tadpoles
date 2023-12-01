@@ -27,7 +27,7 @@ end
 % figure;
 I1ct=imcrop(I1(:,:,1),ROI{11}.Position);
  imshow(I1ct)
-thresh_im=0.3;%no screen
+thresh_im=0.27;%no screen
 % thresh_im=0.32;%with screen
 %thresh_im=0.43;%with screen top and side
 
@@ -99,7 +99,8 @@ end
 time=1/v.FrameRate:1/v.FrameRate:(nframes-1)/v.FrameRate;
 % dlpm=lowpass(nanmean(d),0.2);
 %find the stimulus time
-thresh_led=50;
+thresh_led=20;
+esc_thresh=3;%escape threshold pick this empirically depends on the video quality, check the traces
 [PKSS,LOCSS]=findpeaks(LED,'MinPeakHeight',thresh_led,'MinPeakDistance',v.FrameRate*2);
 for i=1:length(LOCSS)
    % line([time(LOCSS(i)),time(LOCSS(i))],[-1,5],'Color','g')
@@ -126,9 +127,9 @@ for i=1:length(LOCSS)
 % 
 %         end
         Max_rate=max([dmd(j,LOCSS(i)),dmd(j,LOCSS(i)+1),dmd(j,LOCSS(i)+2),dmd(j,LOCSS(i)+3),dmd(j,LOCSS(i)+4)]);
-        if dmd(j,LOCSS(i)-5)> 1 || Max_rate>15
+        if dmd(j,max(LOCSS(i)-5,1))> 1 || Max_rate>80 || isnan(Max_rate)
             Resp(j,i)=NaN;
-        elseif Max_rate>1 && Max_rate<=15
+        elseif Max_rate>esc_thresh && Max_rate<=80
             Resp(j,i)=1;
         else
             Resp(j,i)=0;
@@ -160,6 +161,7 @@ resp_prob(1:length(LOCSS))=nanmean(Resp,1);
 % figure;plot(resp_prob,'g*-');hold on
 % f=fit((1:1:20)',(resp_prob(1:20)),'exp1');plot(f,(1:1:20)',(resp_prob(1:20))')
 save(strcat(filename(1:end-4),'_analyzed.mat'))
+ii
 clearvars -except filenames
 end
 toc

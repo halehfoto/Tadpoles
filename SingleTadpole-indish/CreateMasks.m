@@ -4,7 +4,7 @@ close all
 path=uigetdir;
 cd(path)
 %read the avi file
-filename='20231005_11_46_00_WB7_D1_090_Pre_baseline_SG';
+filename='20231018_09_48_00_WB3_D1_090_Pre_baseline_SG';
 v=VideoReader(strcat(filename,'.mp4'));
 k=1;
 v.CurrentTime = 0;

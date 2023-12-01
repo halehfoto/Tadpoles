@@ -13,22 +13,27 @@ for i=1:length(filenames)
     v.CurrentTime = 0;
     I1=readFrame(v);
     %tadpolen=input('please enter the number of tadpoles:');
-    figure(1)
+    figure(i)
     imshow(I1);
     color=jet(tadpolen);
 
     for j=1:tadpolen
-        figure(1)
-        drawrectangle('Position',ROI{j}.Position,'Color',color(j,:));
-
-        %keyboard
+        figure(i)
+        ROI_temp{j}=drawrectangle('Position',ROI{j}.Position,'Color',color(j,:));
+        %ROI_temp{j}.Position
     end
+    keyboard
+    ROI
+    ROI=ROI_temp
+
     % keyboard
     % 
     % figure
     % imshow(I1);
     % ROI_LED=drawrectangle();
-    drawrectangle('Position',ROI_LED.Position,'Color','r')
+    ROI_LED_temp=drawrectangle('Position',ROI_LED.Position,'Color','r')
+    keyboard
+    ROI_LED=ROI_LED_temp
     %keyboard
 
     save(strcat(filenames(i).name(1:end-4),'_maskData.mat'))

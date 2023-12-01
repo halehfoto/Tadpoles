@@ -16,9 +16,9 @@ for kk=1:length(filenames)
     figure;
     I1ct=imcrop(I1(:,:,1),ROI{11}.Position);
     imshow(I1ct)
-    %thresh_im=0.3;%no screen
+    thresh_im=0.3;%no screen
     %thresh_im=0.32;%with screen
-    thresh_im=0.43;%with screen top and side
+    %thresh_im=0.43;%with screen top and side
 
     figure;
     I1bwt=im2bw(I1(:,:,1),thresh_im);
